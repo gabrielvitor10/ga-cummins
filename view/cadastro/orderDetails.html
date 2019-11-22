@@ -1,0 +1,79 @@
+
+
+<div class="row">
+    <h4>Adminstração da ShopOrder</h4>
+    <form name="validation">
+    <div style="float: right;">
+            <button class="btn btn-danger " ng-if='selectedOrder.status === true' data-ng-click="selectedOrder.status = false">Desativar</button>
+            <button class="btn btn-success "  ng-if='selectedOrder.status === false' data-ng-click="selectedOrder.status = true">Ativar</button>
+            <button class="btn btn-success "  ng-disabled="validation.$invalid"   data-ng-click="editOrder(selectedOrder)">Salvar</button> <!-- Manda SALVAR na API através do ID-->
+    </div>
+    
+    <div class="col-lg-8">
+            
+                
+    
+        <label for="username">ShopOrder</label>
+        <input ng-required="true" type="text" ng-model="selectedOrder.shopOrder" class="form-control" id="username" placeholder="Ex:S083000">
+        <br>
+        <label for="code">Protótipo/Validação</label>
+        <select name="tlevel" class="form-control" ng-model="selectedOrder.tipo">
+            <option value="Prototipo" >Protótipo</option>
+            <option value="Validação" >Validação</option>
+        </select>
+        <br>
+        <label for="textphysicalConn">Status Protótipo</label>
+        <select name="tlevel" class="form-control" ng-model="selectedOrder.StatusProt">
+            <option value="Pre-Alfa" >Pre-Alfa</option>
+            <option value="Beta" >Beta</option>
+        </select>
+        <br>
+            <label>Email para Alerta</label>
+                <input ng-required="true" name="email" type="text" ng-pattern="emailFormat" ng-model="selectedOrder.email" class="form-control" id="posit" placeholder="Posição" style="width: 60%">
+        <br>
+            <label>Alerta de Segurança no Lineset</label>
+                <input ng-required="true" name="alertaLineset" type="number" ng-model="selectedOrder.altertLineSet" class="form-control" id="posit" placeholder="Posição" style="width: 60%">
+        <br>
+
+        <div class="row">
+                <h4>Características</h4>
+                <div class="row">
+                    <label class="col-lg-3" for="keyText">Grupo de E-mails</label>
+                    <label class="col-lg-3 col-lg-offset-1" for="estagText">Estágio</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-11">
+                        <div class="col-lg-7 list-item">
+                            <div class="col-lg-5" style="padding-left: 0px;">
+                                <select name="Selecione" class="form-control new-characteristic" ng-model="objectGroup.groupEmails" ng-options="email.key as email.key for email in emailGroup" ></select>
+                                    
+                            </div>
+                            <div class="col-lg-6" style="padding-left: 0px;">
+                                    <select name="Selecione1" class="form-control new-characteristic" ng-model="objectGroup.estags" ng-options="estagio.estag as estagio.estag  for estagio in estagioGroup"> </select>
+                                </div> 
+                            <div class="col-lg-1 pull-right">
+                                <span characteristic data-ng-click="addNewGroup(objectGroup, selectedOrder );" class="glyphicon glyphicon-plus-sign" style="margin-top:8px" role="button"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="form-group col-lg-11" ng-repeat="x in  selectedOrder.groupResult">
+                    <div class="col-lg-6 list-item">
+                        <div class="col-lg-5">
+                            {{x.groupEmails}}
+                        </div>
+                        <div class="col-lg-5 division">
+                            {{x.estags}}
+                        </div>
+                        <div class="col-lg-1 division pull-right">
+                            <span data-ng-click="deleteGroup(selectedOrder, x);"
+                                  class="glyphicon glyphicon-remove .thinginternal-btn"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </form>
+</div> 
+

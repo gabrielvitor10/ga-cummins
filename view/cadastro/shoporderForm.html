@@ -1,0 +1,126 @@
+
+<div class="row">
+    <h3  style="white-space: nowrap"; class="col-lg-4 col-lg-offset-1 unselectableText" id="title">Cadastro de Shop Order Protótipo/Validação</h3>
+</div>
+<div class="row">
+    <div class="list-view col-lg-10 col-lg-offset-1">
+        <div class="row navbar">
+            <button class="btn btn-primary" ng-click="openModal('createModal', '');">Criar Novo</button>
+            <input class="form-control searchbar" type="text" ng-model="search" placeholder="Procurar Organização" />
+        </div>
+        <div class="row">
+            <div class="list-navbar">
+                <div class="list-header col-lg-2" id='order-id'><a href="" ng-click="orderBy('id', 'order-id')"> Shop Order <span class="glyphicon "></span></a></div>
+                <div class="list-header col-lg-2 division" id='order-code'><a href="" ng-click="orderBy('code', 'order-code')">Protótipo/Validação<span class="glyphicon "></span></a></div>
+                <div class="list-header col-lg-3 division" id='order-name'><a href="" ng-click="orderBy('name', 'order-name')">Status Protótipo <span class="glyphicon"></span></a></div>
+                <div class="list-header col-lg-3 division" id='order-parentThingId'><a href="" ng-click="orderBy('parentThingId', 'order-parentThingId')">Status <span class="glyphicon"></span></a></div>
+                <!--<div class="list-header col-lg-2 division" id='order-status'><a href="" ng-click="orderBy('status', 'order-status')">Status <span class="glyphicon"></span></a></div>-->
+                <div class="col-lg-1 division">Gerenciamento</div>
+            </div>
+
+            <div ng-repeat="order in orderList| filter:search | orderBy:orderCrit:orderDir" id="thing-{{thing.thingId}}" last-item>
+                <div class="col-lg-12 list-item">
+                    <div class="col-lg-2">{{order.shopOrder}}</div>
+                    <div class="col-lg-2 division">{{order.tipo}}</div>
+                    <div class="col-lg-3 division">{{order.StatusProt}}</div>
+                    <div class="col-lg-3 division" ng-if='order.status === true'>Ativado</div>
+                    <div class="col-lg-3 division" ng-if='order.status === false'>Desativado</div>
+                    <div class="col-lg-1 division">
+                        <span data-ng-click="selectOrder(order); toggle(order.shopOrder, 'details'); bool = !bool"
+                              ng-class="{'glyphicon glyphicon-expand': !bool, 'glyphicon glyphicon-collapse-down': bool}"
+                              class="list-btn"
+                              id='btn-list-{{order.shopOrder}}'></span>
+                    </div>
+                </div>
+
+                <div id="view-detail-{{order.shopOrder}}" class="details col-lg-10  col-lg-offset-1" ng-include="getInclude(order.shopOrder)"></div>
+            </div>
+        </div>
+    </div>
+    <!--
+        Modal para a criação de novas Things
+    -->
+    <div class="modal" id="createModal">
+        <form class="modal-content col-lg-6 col-lg-offset-3" name="groupForm">
+            <span class="close" ng-click="clearThingFields(value, key.key); closeModal('createModal')">×</span>
+            <h4>Administração da Shop Order</h4>
+            <br>
+
+            <fieldset class="form-group">
+                <label>Shop Order</label>
+                <input ng-required="true" class="form-control" type="text" ng-model="newOrder.shopOrder" placeholder="Ex:S083000" />
+                <br>
+                <label class="pb-3">Protótipo/Validação</label>
+                <select ng-required="true" name="tlevel" class="form-control" ng-model="newOrder.tipo" >
+                    <option value="" disabled selected>Selecione</option>
+                    <option value="Prototipo" >Protótipo</option>
+                    <option value="Validação" >Validação</option>
+                </select>
+                <br>
+                <label>Status Protótipo</label>
+                <select ng-required="true" name="tlevel" class="form-control" ng-model="newOrder.StatusProt" >
+                    <option value="" disabled selected>Selecione</option>
+                    <option value="Pre-Alfa" >Pre-Alfa</option>
+                    <option value="Beta" >Beta</option>
+                </select>
+                <br>
+                <label>E-mails Para alerta</label>
+                <br>
+                    <input name="mail" ng-required="true" class="form-control" type="text" ng-pattern="emailFormat" ng-model="newOrder.email" placeholder="mail@mail.com"/>
+                    <span class="error" ng-show="groupForm.mail.$error.pattern">
+                            Not valid email!
+                          </span>
+                <br>
+                <label>Alerta de sequencia no Lineset</label>
+               <br>
+               <input ng-required="true" class="form-control" type="number" ng-model="newOrder.altertLineSet" placeholder="Digite O Número" />
+                <br>
+               <select ng-model="ctc.groupEmails" ng-options="email.key as email.key for email in emailGroup| orderBy:'key'">
+                <option value="" disabled selected>Selecione uma Chave</option>
+
+            </select>
+            <select ng-model="ctc.estags" ng-options="estagio.estag as estagio.estag  for estagio in estagioGroup| orderBy:'key'">
+                <option value="" disabled selected>Selecione uma Chave</option>
+                </select>
+                    <button class="btn btn-success btnModal" ng-disabled="" ng-click="addNewGroup(ctc, newOrder);"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                    <button class="btn btn-success btnModal" ng-disabled="groupForm.$invalid" data-ng-click="cadastro(newOrder); closeModal('createModal')">Criar Organização</button>
+                    <button class="btn btn-danger cancel btnModal" ng-click="clearThingFields(value, key.key); closeModal('createModal')">Cancelar</button>
+                    
+                    <div class="form-group col-lg-11" ng-repeat="mostrar in  newOrder.groupResult">
+                        <div class="col-lg-6 list-item">
+                            <div class="col-lg-5">
+                                {{mostrar.groupEmails}}
+                            </div>                                          
+                            <div class="col-lg-5 division">
+                                {{mostrar.estags}}
+                            </div>
+                            <div class="col-lg-1 division pull-right">
+                                <span data-ng-click="deleteGroup(newOrder, mostrar);"
+                                      class="glyphicon glyphicon-remove .thinginternal-btn"></span>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </fieldset>
+            
+            <br>
+        
+        </form>
+    </div>
+
+    <!--
+       Dialog para confirmação
+    -->
+    <!-- Modal confirmação delete -->
+    <div class="modal" id="confirmationDialog">
+        <form class="modal-content col-lg-2 col-lg-offset-5">
+            <span class="close" ng-click="closeModal('confirmationDialog')">×</span>
+            <p class="dialog-text col-lg-12">{{dialogMsg}}</p>
+            <br>
+            <button class="dialog-btn btn btn-primary col-lg-5" data-ng-click="deleteThing(selectedThing); closeModal('confirmationDialog');">Sim</button>
+            <button class="dialog-btn btn btn-danger col-lg-5 col-lg-offset-2" data-ng-click="closeModal('confirmationDialog')">Nâo</button>
+            <br>
+        </form>
+    </div> <!-- End Confirmation Modal -->
+    
+</div>

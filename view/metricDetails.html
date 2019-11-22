@@ -1,0 +1,125 @@
+﻿<fieldset class="form-group col-lg-3">
+    <label>Descrição</label>
+    <input type="text" ng-keyup="validateMetricDescription(meta.Metrics, newMetric)" ng-model="newMetric.descMetric" class="form-control"
+        placeholder="Descrição">
+</fieldset>
+
+<fieldset class="form-group col-lg-3">
+    <label>Ciclo</label>
+    <select class="form-control" ng-model="newMetric.cycle">
+            <option value="">Selecionar</option>
+            <option value="hour">Hora</option>
+            <option value="schedule">Turno</option>
+            <option value="day">Dia</option>
+            <option value="week">Semana</option>
+            <option value="month">Mês</option>
+            <option value="year">Ano</option>
+        </select>
+</fieldset>
+<fieldset class="form-group col-lg-3">
+    <label>Progressão</label>
+    <select class="form-control" ng-model="newMetric.progression">
+            <option value="">Selecionar</option>
+            <option value="fix">Fixo</option>
+            <option ng-if="meta.type != 'lineset_queue'" value="min">Minuto</option>
+            <option ng-if="meta.type != 'lineset_queue'" value="hour">Hora</option>
+            <option ng-if="meta.type != 'lineset_queue'" value="schedule">Turno</option>
+            <option ng-if="meta.type != 'lineset_queue'" value="day">Dia</option>
+            <option ng-if="meta.type != 'lineset_queue'" value="week">Semana</option>
+            <option ng-if="meta.type != 'lineset_queue'" value="month">Mês</option>
+            <option ng-if="meta.type != 'lineset_queue'" value="year">Ano</option>
+        </select>
+</fieldset>
+
+<!-- *CICERO* -->
+<!-- Campo não é mais necessário -->
+<!--
+<fieldset class="form-group col-lg-3">
+    <label>Valor</label>
+    <input type="number" ng-model="newMetric.value" class="form-control" placeholder="Valor">
+</fieldset>
+-->
+
+<fieldset class="form-group col-lg-3">
+    <label>Proc. de Paradas de Produção </label>
+    <select class="form-control" ng-model="newMetric.processBreaksProduction">
+            <option value="">Selecionar</option>
+            <option value="zero">Zero</option>
+            <option value="include">Incluir</option>
+            <option value="window">Janela de Tempo</option>
+        </select>
+</fieldset>
+
+<fieldset class="form-group col-lg-3">
+    <label>Proc. de Paradas de Predição </label>
+    <select class="form-control" ng-model="newMetric.processBreaksPrediction">
+            <option value="">Selecionar</option>
+            <option value="zero">Zero</option>
+            <option value="include">Incluir</option>
+            <option value="window">Janela de Tempo</option>
+        </select>
+</fieldset>
+
+<!-- *CICERO* -->
+<!-- Campo consideraTurno será sempre true no controller -->
+<!--
+<fieldset class="form-group col-lg-3">
+    <label>
+            Considera Turno
+            <br>
+            <input type="checkbox" ng-model="newMetric.considerSchedule" class="form-control" placeholder="Valor">
+        </label>
+
+</fieldset>
+-->
+<!-- END *CICERO* -->
+
+<fieldset class="form-group col-lg-2">
+    <label>
+            Tempo Completo
+            <br>
+            <input type="checkbox" ng-model="newMetric.fulltime" class="form-control" placeholder="Valor">
+        </label>
+</fieldset>
+
+<!-- *CICERO* em 22-jun-2017 -->
+<fieldset class="form-group col-lg-12">
+    <div class="row">
+
+        <fieldset class="form-group col-lg-6">
+            <label>Turnos</label>
+            <select class="form-control" ng-model="selectedSchedule">
+					<option value="" disabled selected>Selecionar</option>
+					<option ng-repeat="availableSchedule in availableSchedules" value="{{availableSchedule}}">{{availableSchedule.scheduleName}}</option>
+				</select>
+        </fieldset>
+
+        <fieldset class="form-group col-lg-3">
+            <label>Valor</label>
+            <input type="number" ng-model="selectedScheduleValue" class="form-control" placeholder="Valor" value="0">
+        </fieldset>
+
+        <fieldset class="form-group col-lg-1">
+            <label astyle="color: white;"></label>
+            <button class="btn btn-success form-control" ng-disabled="!selectedSchedule || !selectedScheduleValue ||  selectedScheduleValue < 0" ng-click="addTurno(selectedSchedule, newMetric, selectedScheduleValue)">+</button>
+        </fieldset>
+    </div>
+    <div class="row">
+        <!--Dados de Parent ScheduleList-->
+        <div class="form-group col-lg-7" ng-repeat="xpto in newMetric.Schedules">
+            <div class="col-lg-12 list-item">
+                <div class="col-lg-9 ">
+                    <label>{{xpto.scheduleName}}</label>
+                </div>
+                <div class="col-lg-2 ">
+                    <label>{{xpto.quantity}}</label>
+                </div>
+                <div class="col-lg-1 division">
+                    <span data-ng-click="removeTurno(xpto, newMetric)" class="glyphicon glyphicon-remove .thinginternal-btn"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- END *CICERO* em 22-jun-2017 -->
+    <div ng-include="'MetricFormError.html'"></div>
